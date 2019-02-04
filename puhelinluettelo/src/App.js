@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-
-const Person = (props) => {
-  return (
-    <div>{props.person.name} {props.person.number}</div>
-  )
-}
+import Person from './components/Person'
+import Filter from './components/Filter'
 
 const App = () => {
   const [ persons, setPersons] = useState([
@@ -19,17 +15,14 @@ const App = () => {
   const [ newCriteria, setNewCriteria] = useState('')
 
   useEffect(() => {
-    console.log('effect')
     axios
       .get('http://localhost:3001/persons')
       .then(response => {
-        console.log('promise fulfilled')
         setPersons(response.data)
       })
   }, [])
-  console.log('render', persons.length, 'persons')
 
-  const addName = (event) => {
+  const addPerson = (event) => {
     event.preventDefault()
     const noteObject = {
       name: newName,
@@ -72,16 +65,17 @@ const App = () => {
   return (
     <div>
       <h2>Puhelinluettelo</h2>
-        <div>rajaa näytettäviä: <input value={newCriteria} onChange={handleCompareNames}/></div>
-        <div>
-          <form onSubmit={addName}>
+        <Filter value={newCriteria} onChange={handleCompareNames}/>
+        {/* <div>rajaa näytettäviä: <input value={newCriteria} onChange={handleCompareNames}/></div> */}
+        {<div>
+          <form onSubmit={addPerson}>
            <div>nimi: <input value={newName}
             onChange={handleNameChange}
             /></div>
             <div>numero: <input value={newNumber} onChange={handleNumberChange} /></div>
             <button type="submit">lisää</button>
           </form>
-        </div>
+        </div>}
       <h2>Numerot</h2>
       {rows()}
     </div>
